@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="ApiTestSuite">
+    <test name="ApiTest">
+
+        <!--<groups>-->
+            <!--<run>-->
+                <!--<include name="functional"/>-->
+            <!--</run>-->
+        <!--</groups>-->
+        <classes>
+            <class name="ua.net.streamtv.tests.SportsmanApiTest"/>
+        </classes>
+    </test>
+    <!--<listeners>-->
+        <!--<listener class-name="ua.net.streamtv.utils.TestListener"/>-->
+        <!--<listener class-name="ua.net.streamtv.utils.MethodListener"/>-->
+    <!--</listeners>-->
+</suite>

@@ -1,7 +1,10 @@
 package ua.net.streamtv.entities;
 
-import java.util.ArrayList;
-import java.util.List;
+import static org.apache.commons.lang3.RandomStringUtils.*;
+
+import org.testng.annotations.DataProvider;
+
+import java.util.*;
 
 /**
  * Created by nskrypka on 8/28/2015.
@@ -93,5 +96,22 @@ public class Sportsman {
         info.add(region1);
         info.add(fst1);
         return info;
+    }
+
+    @DataProvider(name = "randomSportsman")
+    public static Object[][] createRandomSportsman() {
+        Map<String, String> sportsmanMap = new HashMap<>();
+        sportsmanMap.put("lname", randomAlphabetic(5));
+        sportsmanMap.put("dob", "0" + randomNumeric(1) + "-0" + randomNumeric(1) + "-19" + randomNumeric(2));
+        sportsmanMap.put("region1", String.valueOf(new Random().nextInt(26) + 1));
+        sportsmanMap.put("fst1", String.valueOf(new Random().nextInt(6) + 1));
+        sportsmanMap.put("style", String.valueOf(new Random().nextInt(2) + 1));
+        sportsmanMap.put("expires", "2016");
+        sportsmanMap.put("fname", randomAlphabetic(5));
+        sportsmanMap.put("mname", randomAlphabetic(5));
+        sportsmanMap.put("lictype", "1");
+        return new Object[][] {
+                new Object[] {sportsmanMap}
+        };
     }
 }

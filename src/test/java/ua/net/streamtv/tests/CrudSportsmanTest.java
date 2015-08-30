@@ -11,7 +11,7 @@ public class CrudSportsmanTest {
 
     private Logger LOG = LoggerFactory.getLogger(this.getClass());
 
-    @Test
+    @Test (groups = {"functional"})
     public void addSportsmanTest (){
         LOG.info("Add sportsman test starts...");
     }
