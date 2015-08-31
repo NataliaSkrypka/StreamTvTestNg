@@ -50,11 +50,6 @@ public class SportsmanApiTest {
         assertThat("Sportsman after update through API is not as expected", actualSportsman, equalTo(sportsmanAfterAdd));
     }
 
-
-    //    Given login through API
-//    Given search for Petrova+Nata+Anna sportsman
-//    When delete found sportsman
-//    Then there is no more sportman with Petrova+Nata+Anna fio
     @Test(description = "Test case for testing ability to delete sportsman through API",priority = 3)
     public void deleteSportsmanThroughAPITest() {
         ApiSportsman sportsmanBeforeDelete = apiSteps.readSportsman(sportsmanId);

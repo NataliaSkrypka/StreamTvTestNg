@@ -83,9 +83,11 @@ public class ApiSteps {
         Response response = given().cookie("PHPSESSID", sessionId).
                 when().get(searchUrl, searchParameter);
         response.then().statusCode(200);
-        assertThat(response.asString(), not(containsString("Invalid query")));
-        ArrayList<ApiSportsman> rows = new Gson().fromJson(response.asString(), new TypeToken<ArrayList<ApiSportsman>>(){}.getType());
-        if (rows.size() == 0) {
+        String responseString = response.asString();
+        assertThat(responseString, not(containsString("Invalid query")));
+        if (!responseString.contains("{\"total\":\"0\"")) {
+            ArrayList<ApiSportsman> rows = new Gson().fromJson(responseString, new TypeToken<ArrayList<ApiSportsman>>() {
+            }.getType());
             sportsmanId = rows.get(0).getId();
             LOG.info(sportsmanId + " sportsman was found through API for search parameter " + searchParameter);
         }
@@ -94,11 +96,9 @@ public class ApiSteps {
 
     public void updateSportsman(ApiSportsman sportsman) {
         String givenSportsman = new Gson().toJson(sportsman);
-        LOG.info("********************************************************* " + givenSportsman);
         Response response = given().contentType(JSON).cookie("PHPSESSID", sessionId).body(givenSportsman).
                 when().post(updateUrl);
         response.then().statusCode(200);
-        response.prettyPrint();
         assertThat(response.asString(), not(containsString("Invalid query")));
         LOG.info(sportsman.getLastName() + " sportsman was updated successfully through API");
     }

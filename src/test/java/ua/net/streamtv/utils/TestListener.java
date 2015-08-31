@@ -1,13 +1,12 @@
 package ua.net.streamtv.utils;
 
+import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.Marker;
-import org.slf4j.MarkerFactory;
 import org.testng.ITestContext;
-import org.testng.ITestListener;
 import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
+import ua.net.streamtv.guiceConfiguration.GuiceTestClass;
 
 /**
  * Created by nskrypka on 8/30/15.
@@ -32,6 +31,11 @@ public class TestListener extends TestListenerAdapter {
     public void onTestStart(ITestResult result) {
         log = LoggerFactory.getLogger(result.getInstanceName());
         log.info ("------------------------------------ " + result.getName() + " started -------------------------------------");
+    }
+
+    @Override
+    public void onFinish(ITestContext testContext){
+
     }
 
 
