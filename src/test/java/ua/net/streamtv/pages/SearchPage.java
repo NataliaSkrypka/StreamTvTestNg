@@ -8,19 +8,23 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.Guice;
-import ua.net.streamtv.guiceConfiguration.GuiceConfigForPageObject;
+import ru.yandex.qatools.htmlelements.element.TextInput;
+import ua.net.streamtv.guiceConfiguration.GuiceTestClass;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
 
 /**
  * Created by nskrypka on 8/20/2015.
  */
-//@Guice(modules = GuiceConfigForPageObject.class)
+@Guice(modules = GuiceTestClass.class)
 public class SearchPage extends GeneralPage {
 
-//    @Inject
     private WebDriver driver;
+
+    private Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     private static final By NEW_SPORTSMAN_BUTTON = By.cssSelector(".form-group .btn-default");
     private static final By SEARCH_INPUT = By.cssSelector("input[ng-model=searchFor]");
@@ -31,40 +35,44 @@ public class SearchPage extends GeneralPage {
     @FindBy(xpath = "//select[@ng-model='filters.ffst']")
     private WebElement fstSelect;
 
+    @Inject
     public SearchPage(WebDriver driver) {
+        super(driver);
         this.driver = driver;
         PageFactory.initElements(driver, this);
     }
 
     public void clickAddNewSportsman() {
-        new WebDriverWait(driver, 3000).until(presenceOfElementLocated(NEW_SPORTSMAN_BUTTON));
-        driver.findElement(NEW_SPORTSMAN_BUTTON).click();
+        waitForElementPresence(NEW_SPORTSMAN_BUTTON, 3).click();
     }
 
     public void searchForSportsman(String lastName) {
-        new WebDriverWait(driver, 3000).until(presenceOfElementLocated(SEARCH_INPUT));
-        driver.findElement(SEARCH_INPUT).clear();
-        driver.findElement(SEARCH_INPUT).sendKeys(lastName);
+        WebElement searchInput = waitForElementPresence(SEARCH_INPUT, 3);
+        searchInput.clear();
+        searchInput.sendKeys(lastName);
         driver.findElement(SEARCH_BUTTON).click();
+        LOG.info("Search action was performed for " + lastName);
     }
 
     public void openSportsmanDetails() {
-        new WebDriverWait(driver, 3000).until(presenceOfElementLocated(RESULT_ROW));
-        driver.findElement(RESULT_ROW).click();
+        waitForElementPresence(RESULT_ROW, 3).click();
+        LOG.info("Sportsman details page is opened");
     }
 
     public int getSearchResultSize() {
+        new WebDriverWait(driver, 5000);
         return driver.findElements(RESULT_ROW).size();
     }
 
-    public void selectRegionFilter(String region) {
-        new WebDriverWait(driver, 3000).until(presenceOfElementLocated(REGION_FILTER));
-        Select regionDropdown = new Select(driver.findElement(REGION_FILTER));
-        regionDropdown.selectByVisibleText(region);
+    public void selectRegionFilter(int region) {
+        Select regionDropdown = new Select(waitForElementPresence(REGION_FILTER, 3));
+        regionDropdown.selectByIndex(region);
+        LOG.info(region + " region was selected");
     }
 
-    public void selectFstFilter(String fst) {
+    public void selectFstFilter(int fst) {
         Select fstDropdown = new Select(fstSelect);
-        fstDropdown.selectByVisibleText(fst);
+        fstDropdown.selectByIndex(fst);
+        LOG.info(fst + " fst was selected");
     }
 }

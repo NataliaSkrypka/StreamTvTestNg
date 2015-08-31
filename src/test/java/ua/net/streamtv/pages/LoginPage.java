@@ -5,24 +5,23 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.Duration;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Sleeper;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.Guice;
 import ru.yandex.qatools.htmlelements.element.Button;
 import ru.yandex.qatools.htmlelements.element.TextInput;
 import ru.yandex.qatools.htmlelements.loader.decorator.HtmlElementDecorator;
-import ua.net.streamtv.guiceConfiguration.GuiceConfigForPageObject;
-
-import java.util.concurrent.TimeUnit;
+import ua.net.streamtv.guiceConfiguration.GuiceTestClass;
 
 /**
  * Created by nskrypka on 8/19/2015.
  */
-//@Guice(modules = GuiceConfigForPageObject.class)
-public class LoginPage extends  GeneralPage{
+@Guice(modules = GuiceTestClass.class)
+public class LoginPage extends GeneralPage {
 
+    private Logger LOG = LoggerFactory.getLogger(this.getClass());
     private WebDriver driver;
 
     private static final By LOGIN_INPUT = By.cssSelector("input[placeholder=Login]");
@@ -36,17 +35,20 @@ public class LoginPage extends  GeneralPage{
     private String login;
     private String password;
 
-    public LoginPage(WebDriver driver, String baseUrl, String login, String password) {
+    @Inject
+    public LoginPage(WebDriver driver) {
+        super(driver);
         this.driver = driver;
-        this.baseUrl = baseUrl;
-        this.login = login;
-        this.password = password;
+        this.baseUrl = "http://streamtv.net.ua/base/";
+        this.login = "auto";
+        this.password = "test";
         PageFactory.initElements(new HtmlElementDecorator(driver), this);
     }
 
     public void openSite() {
         driver.get(baseUrl);
         driver.manage().window().maximize();
+        LOG.info(baseUrl + " site is opened");
     }
 
     public void login() {
@@ -56,5 +58,6 @@ public class LoginPage extends  GeneralPage{
         passwordInput.clear();
         passwordInput.sendKeys(password);
         loginButton.click();
+        LOG.info("User is logged into site");
     }
 }

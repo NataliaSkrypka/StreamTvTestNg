@@ -6,6 +6,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import ua.net.streamtv.pages.LoginPage;
+import ua.net.streamtv.pages.SearchPage;
+import ua.net.streamtv.pages.SportsmanDetailsPage;
 import ua.net.streamtv.steps.ApiSteps;
 
 /**
@@ -15,8 +17,11 @@ public class GuiceTestClass implements Module {
 
     @Override
     public void configure(Binder binder) {
+        binder.bind(WebDriver.class).toInstance(getDriver());
         binder.bind(ApiSteps.class).toInstance(new ApiSteps());
-        binder.bind(LoginPage.class).toInstance(new LoginPage(getDriver(),"http://streamtv.net.ua/base/", "auto", "test"));
+        binder.bind(LoginPage.class);
+        binder.bind(SportsmanDetailsPage.class);
+        binder.bind(SearchPage.class);
     }
 
     private WebDriver getDriver() {

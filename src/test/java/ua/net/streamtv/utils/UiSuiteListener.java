@@ -14,7 +14,5 @@ public class UiSuiteListener implements ISuiteListener{
 
     @Override
     public void onFinish(ISuite iSuite) {
-iSuite.getAllInvokedMethods();
-        iSuite.getAllMethods();
     }
 }

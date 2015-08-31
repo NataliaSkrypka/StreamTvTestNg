@@ -196,9 +196,10 @@ public class UiSportsman {
         sportsman.setStyle("FW");
         sportsman.setYear("2016");
         sportsman.setRegion1("Poltavska");
-        sportsman.setFst1("FS");
+        sportsman.setFst1("Kolos");
+        sportsman.setAge("Junior");
         return new Object[][]{
-                Object [] {sportsman}
+                new Object [] {sportsman}
         };
     }
 }

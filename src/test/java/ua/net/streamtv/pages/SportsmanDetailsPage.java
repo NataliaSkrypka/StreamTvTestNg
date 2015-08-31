@@ -7,12 +7,14 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.Duration;
+import org.openqa.selenium.support.ui.Sleeper;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Guice;
 import ru.yandex.qatools.htmlelements.element.Select;
 import ru.yandex.qatools.htmlelements.element.TextInput;
 import ru.yandex.qatools.htmlelements.loader.decorator.HtmlElementDecorator;
-import ua.net.streamtv.guiceConfiguration.GuiceConfigForPageObject;
+import ua.net.streamtv.guiceConfiguration.GuiceTestClass;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -25,10 +27,9 @@ import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElemen
 /**
  * Created by nskrypka on 8/20/2015.
  */
-//@Guice(modules = GuiceConfigForPageObject.class)
+@Guice(modules = GuiceTestClass.class)
 public class SportsmanDetailsPage extends GeneralPage {
 
-//    @Inject
     private WebDriver driver;
 
     public static final By ACCEPT_ALERT_BUTTON = By.xpath("//div[@class='modal-dialog']//button[@class='btn btn-success']");
@@ -65,7 +66,7 @@ public class SportsmanDetailsPage extends GeneralPage {
     @FindBy(css = "tab-heading.ng-scope .glyphicon-remove")
     private WebElement closeTabIcon;
 
-    private static final String WRESTLERS_TAB = "//div[@class='close-it']/ico[@class!='ng-hide']";
+    private static final By WRESTLERS_TAB = By.xpath("//div[@class='close-it']/ico[@class!='ng-hide']");
 
     private static final By PHOTO_UPLOAD_BUTTON = By.xpath("//input[@uploader='photoUploader']");
     private static final String PHOTO_LOCATION = "//img[contains(@src,'data/photo')]";
@@ -74,7 +75,7 @@ public class SportsmanDetailsPage extends GeneralPage {
 
     private static final String FILE_LOCATION = "//a[contains(@href,'data/attach')]";
 
-    private static final String DELETE_ATTACHMENT_ICON = "//ico[@ng-click='deleteAttach($index)']";
+    private static final By DELETE_ATTACHMENT_ICON = By.xpath("//ico[@ng-click='deleteAttach($index)']");
 
     private static final String ATTACHMENT_ROW = "//div[@class='file-drop']/table/tbody/tr";
 
@@ -84,15 +85,17 @@ public class SportsmanDetailsPage extends GeneralPage {
     @FindBy(xpath = "//fg-select[@value='wr.fst2']//select")
     private Select fst1Select;
 
+    @Inject
     public SportsmanDetailsPage(WebDriver driver) {
+        super(driver);
         this.driver = driver;
         PageFactory.initElements(new HtmlElementDecorator(driver), this);
     }
 
     public void typeLastName(String lastName) {
-        new WebDriverWait(driver, 3000).until(presenceOfElementLocated(LAST_NAME_INPUT));
-        driver.findElement(LAST_NAME_INPUT).clear();
-        driver.findElement(LAST_NAME_INPUT).sendKeys(lastName);
+        WebElement lastNameInput = waitForElementPresence(LAST_NAME_INPUT, 3);
+        lastNameInput.clear();
+        lastNameInput.sendKeys(lastName);
     }
 
     public void typeDateOfBirth(String dateOfBirth) {
@@ -131,13 +134,12 @@ public class SportsmanDetailsPage extends GeneralPage {
     }
 
     public void clickAddNewWrestler() {
-        new WebDriverWait(driver, 3000).until(presenceOfElementLocated(ADD_BUTTON));
+        waitForElementPresence(ADD_BUTTON, 3);
         driver.findElement(ADD_BUTTON).click();
     }
 
     public void closeSportsmanInfoTab() {
-        new WebDriverWait(driver, 3000).until(presenceOfElementLocated(By.xpath(WRESTLERS_TAB)));
-        driver.findElement(By.xpath(WRESTLERS_TAB)).click();
+        waitForElementPresence(WRESTLERS_TAB, 3).click();
     }
 
     public String getLastName() {
@@ -177,14 +179,13 @@ public class SportsmanDetailsPage extends GeneralPage {
     }
 
     public void deleteSportsman() {
-        new WebDriverWait(driver, 3000).until(presenceOfElementLocated(DELETE_BUTTON));
-        driver.findElement(DELETE_BUTTON).click();
+        waitForElementPresence(DELETE_BUTTON, 3).click();
         driver.findElement(ACCEPT_ALERT_BUTTON).click();
+        waitForAbsenceOfElement(ACCEPT_ALERT_BUTTON, 5);
     }
 
     public void uploadPhoto(String photoPath) {
-        new WebDriverWait(driver, 3000).until(presenceOfElementLocated(PHOTO_UPLOAD_BUTTON));
-        driver.findElement(PHOTO_UPLOAD_BUTTON).sendKeys(photoPath);
+        waitForElementPresence(PHOTO_UPLOAD_BUTTON, 3).sendKeys(photoPath);
     }
 
     public String downloadPhoto() throws IOException {
@@ -196,8 +197,7 @@ public class SportsmanDetailsPage extends GeneralPage {
     }
 
     public void uploadFile(String fileAbsolutePath) {
-        new WebDriverWait(driver, 3000).until(presenceOfElementLocated(FILE_UPLOAD_BUTTON));
-        driver.findElement(FILE_UPLOAD_BUTTON).sendKeys(fileAbsolutePath);
+        waitForElementPresence(FILE_UPLOAD_BUTTON, 3).sendKeys(fileAbsolutePath);
     }
 
     public String downloadFile() throws IOException {
@@ -208,7 +208,7 @@ public class SportsmanDetailsPage extends GeneralPage {
     }
 
     public void deleteAttachment() {
-        driver.findElement(By.xpath(DELETE_ATTACHMENT_ICON)).click();
+        waitForElementPresence(DELETE_ATTACHMENT_ICON, 3).click();
     }
 
     public int getNumberOfAttachments() {

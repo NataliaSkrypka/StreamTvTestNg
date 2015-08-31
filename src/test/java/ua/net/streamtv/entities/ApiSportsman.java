@@ -158,7 +158,7 @@ public class ApiSportsman {
         sportsman.setLastName(randomAlphabetic(5));
         sportsman.setDateOfBirth("0" + randomNumeric(1) + "-0" + randomNumeric(1) + "-19" + randomNumeric(2));
         sportsman.setRegion(String.valueOf(new Random().nextInt(25) + 2));
-        sportsman.setFst(String.valueOf(new Random().nextInt(6) + 1));
+        sportsman.setFst(String.valueOf(new Random().nextInt(5) + 2));
         sportsman.setStyle(String.valueOf(new Random().nextInt(2) + 1));
         sportsman.setYear("2016");
         sportsman.setFirstName(randomAlphabetic(5));

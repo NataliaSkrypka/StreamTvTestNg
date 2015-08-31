@@ -2,15 +2,20 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
 <suite name="TestSuite">
+    <parameter name="photoName" value="download2.jpg"/>
+    <parameter name="expectedPhoto" value="expectedImage.png"/>
+    <parameter name="fileName" value="TaskforTechnicalInterviewNIAutomationv0.2.pdf"/>
     <test name="UiTest">
 
         <!--<groups>-->
-            <!--<run>-->
-                <!--<include name="functional"/>-->
-            <!--</run>-->
+        <!--<run>-->
+        <!--<include name="functional"/>-->
+        <!--</run>-->
         <!--</groups>-->
         <classes>
             <class name="ua.net.streamtv.tests.CrudSportsmanTest"/>
+            <class name="ua.net.streamtv.tests.SearchSportsmanTest"/>
+            <class name="ua.net.streamtv.tests.UploadFilesTest"/>
         </classes>
     </test>
 </suite>
