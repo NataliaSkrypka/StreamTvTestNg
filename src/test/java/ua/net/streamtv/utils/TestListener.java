@@ -1,14 +1,10 @@
 package ua.net.streamtv.utils;
 
-import com.google.inject.Inject;
-import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
-import org.testng.annotations.Guice;
-import ua.net.streamtv.guiceConfiguration.GuiceTestClass;
 
 /**
  * Created by nskrypka on 8/30/15.
@@ -26,6 +22,7 @@ public class TestListener extends TestListenerAdapter {
     @Override
     public void onTestFailure(ITestResult tr) {
         log = LoggerFactory.getLogger(tr.getInstanceName());
+        tr.getThrowable().printStackTrace();
         log.info("///////////////////////////////////// " + tr.getName() + " failed /////////////////////////////////////////");
     }
 

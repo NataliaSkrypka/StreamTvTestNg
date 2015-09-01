@@ -22,11 +22,6 @@ import static org.hamcrest.MatcherAssert.*;
 /**
  * Created by nskrypka on 8/31/15.
  */
-//
-//        Scenario: Delete attachment from profile
-//        Given user login to streamtv site
-//        When user delete attachment for Sidorova Nata Anna profile
-//        Then this sporsman's profile do not have attachments
 @Listeners(TestListener.class)
 @Guice(modules = GuiceTestClass.class)
 public class UploadFilesTest {
@@ -58,13 +53,13 @@ public class UploadFilesTest {
         searchPage.searchForSportsman(apiSportsman.getLastName());
         searchPage.openSportsmanDetails();
 
-        sportsmanDetailsPage.uploadPhoto(System.getProperty("user.dir") + "/src/test/resources/files/download2.jpg");
+        sportsmanDetailsPage.uploadPhoto(System.getProperty("user.dir") + "\\src\\test\\resources\\files\\download2.jpg");
         sportsmanDetailsPage.closeSportsmanInfoTab();
 
         searchPage.searchForSportsman(apiSportsman.getLastName());
         searchPage.openSportsmanDetails();
         String downloadedPhotoPath = sportsmanDetailsPage.downloadPhoto();
-        boolean arePhotosEqual = FileComparasionUtils.compareImages(System.getProperty("user.dir") + "/src/test/resources/files/expectedImage.png", downloadedPhotoPath);
+        boolean arePhotosEqual = FileComparasionUtils.compareImages(System.getProperty("user.dir") + "\\src\\test\\resources\\files\\expectedImage.png", downloadedPhotoPath);
         assertThat("Downloaded photo is not as expected", arePhotosEqual, is(true));
     }
 
@@ -79,7 +74,7 @@ public class UploadFilesTest {
         searchPage.searchForSportsman(apiSportsman.getLastName());
         searchPage.openSportsmanDetails();
 
-        String fileAbsolutePath = System.getProperty("user.dir") + "/src/test/resources/files/TaskforTechnicalInterviewNIAutomationv0.2.pdf";
+        String fileAbsolutePath = System.getProperty("user.dir") + "\\src\\test\\resources\\files\\TaskforTechnicalInterviewNIAutomationv0.2.pdf";
         sportsmanDetailsPage.uploadFile(fileAbsolutePath);
         sportsmanDetailsPage.closeSportsmanInfoTab();
 

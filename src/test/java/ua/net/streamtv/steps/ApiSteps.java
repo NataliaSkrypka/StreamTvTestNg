@@ -85,6 +85,7 @@ public class ApiSteps {
         response.then().statusCode(200);
         String responseString = response.asString();
         assertThat(responseString, not(containsString("Invalid query")));
+        response.prettyPrint();
         if (!responseString.contains("{\"total\":\"0\"")) {
             ArrayList<ApiSportsman> rows = new Gson().fromJson(responseString, new TypeToken<ArrayList<ApiSportsman>>() {
             }.getType());

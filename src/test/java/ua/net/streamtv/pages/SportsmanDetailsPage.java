@@ -21,6 +21,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
 
@@ -68,12 +69,14 @@ public class SportsmanDetailsPage extends GeneralPage {
 
     private static final By WRESTLERS_TAB = By.xpath("//div[@class='close-it']/ico[@class!='ng-hide']");
 
-    private static final By PHOTO_UPLOAD_BUTTON = By.xpath("//input[@uploader='photoUploader']");
-    private static final String PHOTO_LOCATION = "//img[contains(@src,'data/photo')]";
+    //    private static final By PHOTO_UPLOAD_BUTTON = By.xpath("//input[@uploader='photoUploader']");
+//    private static final By PHOTO_LOCATION = By.xpath("//img[contains(@src,'data/photo')]");
+    private static final By PHOTO_UPLOAD_BUTTON = By.xpath("//div[contains(@class,'photo-drop')]/following-sibling::input");
+    private static final By PHOTO_LOCATION = By.xpath("//div[contains(@class,'photo-drop')]/img");
 
     private static final By FILE_UPLOAD_BUTTON = By.xpath("//input[@uploader='attachUploader']");
 
-    private static final String FILE_LOCATION = "//a[contains(@href,'data/attach')]";
+    private static final By FILE_LOCATION = By.xpath("//a[contains(@href,'data/attach')]");
 
     private static final By DELETE_ATTACHMENT_ICON = By.xpath("//ico[@ng-click='deleteAttach($index)']");
 
@@ -189,7 +192,8 @@ public class SportsmanDetailsPage extends GeneralPage {
     }
 
     public String downloadPhoto() throws IOException {
-        URL url = new URL(driver.findElement(By.xpath(PHOTO_LOCATION)).getAttribute("src"));
+        String location = waitForElementPresence(PHOTO_LOCATION, 3).getAttribute("src");
+        URL url = new URL(location);
         BufferedImage bufImgOne = ImageIO.read(url);
         File photo = File.createTempFile("downloadedPhoto", ".png");
         ImageIO.write(bufImgOne, "png", photo);
@@ -201,7 +205,7 @@ public class SportsmanDetailsPage extends GeneralPage {
     }
 
     public String downloadFile() throws IOException {
-        URL url = new URL(driver.findElement(By.xpath(FILE_LOCATION)).getAttribute("href"));
+        URL url = new URL(waitForElementPresence(FILE_LOCATION, 3).getAttribute("href"));
         File file = File.createTempFile("downloadedFile", ".pdf");
         FileUtils.copyURLToFile(url, file);
         return file.getAbsolutePath();

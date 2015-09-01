@@ -60,7 +60,6 @@ public class SearchPage extends GeneralPage {
     }
 
     public int getSearchResultSize() {
-        new WebDriverWait(driver, 5000);
         return driver.findElements(RESULT_ROW).size();
     }
 
@@ -68,11 +67,13 @@ public class SearchPage extends GeneralPage {
         Select regionDropdown = new Select(waitForElementPresence(REGION_FILTER, 3));
         regionDropdown.selectByIndex(region);
         LOG.info(region + " region was selected");
+        LOG.info(regionDropdown.getFirstSelectedOption().getText() + " region was selected");
     }
 
     public void selectFstFilter(int fst) {
         Select fstDropdown = new Select(fstSelect);
         fstDropdown.selectByIndex(fst);
         LOG.info(fst + " fst was selected");
+        LOG.info(fstDropdown.getFirstSelectedOption().getText() + " FST was selected");
     }
 }

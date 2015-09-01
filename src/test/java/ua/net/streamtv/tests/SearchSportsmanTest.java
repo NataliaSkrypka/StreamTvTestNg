@@ -47,9 +47,9 @@ public class SearchSportsmanTest {
         loginPage.openSite();
         loginPage.login();
 
+        searchPage.searchForSportsman(apiSportsman.getLastName());
         searchPage.selectRegionFilter(Integer.parseInt(apiSportsman.getRegion()) - 1);
         searchPage.selectFstFilter(Integer.parseInt(apiSportsman.getFst()) - 1);
-        searchPage.searchForSportsman(apiSportsman.getLastName());
 
         assertThat("Incorrect search result was shown", searchPage.getSearchResultSize(), is(1));
     }
