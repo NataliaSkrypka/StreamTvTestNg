@@ -49,19 +49,6 @@ public class GuiceTestModule implements Module {
             System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir") + "/src/test/resources/chromedriver.exe");
             return new ChromeDriver();
         } else {
-//            FirefoxProfile profile = new FirefoxProfile();
-//            profile.setPreference("browser.download.folderList", 2);
-//            profile.setPreference("browser.download.manager.showWhenStarting", false);
-//            profile.setPreference("browser.download.manager.focusWhenStarting", false);
-//            profile.setPreference("browser.download.useDownloadDir", true);
-//            profile.setPreference("browser.helperApps.alwaysAsk.force", false);
-//            profile.setPreference("browser.download.manager.alertOnEXEOpen", false);
-//            profile.setPreference("browser.download.manager.closeWhenDone", true);
-//            profile.setPreference("browser.download.manager.showAlertOnComplete", false);
-//            profile.setPreference("browser.download.manager.useWindow", false);
-//            profile.setPreference("browser.helperApps.neverAsk.saveToDisk", "images/jpeg,images/png,application/pdf,application/octet-stream");
-//            profile.setPreference("browser.download.dir", System.getProperty("user.dir") + "/target/");
-
             return new FirefoxDriver();
         }
     }

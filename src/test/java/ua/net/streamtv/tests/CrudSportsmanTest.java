@@ -45,7 +45,6 @@ public class CrudSportsmanTest {
     private UiSportsman uiSportsman;
 
     @Test(dataProviderClass = UiSportsman.class, dataProvider = "randomUiSportsman", priority = 0)
-    @Issues({@Issue("UI-1")})
     @Description("Test for verifying add sportsman functionality on UI")
     @Severity(SeverityLevel.BLOCKER)
     public void addSportsmanTest(UiSportsman uiSportsman) {
@@ -70,7 +69,6 @@ public class CrudSportsmanTest {
         assertThat("Sportsman after adding on UI is not as expected", sportsmanActual, equalTo(uiSportsman));
     }
 
-    @Issues({@Issue("UI-2")})
     @Test(dataProviderClass = UiSportsman.class, dataProvider = "randomUiSportsman", priority = 0)
     @Description("Test for checking update functionality on UI")
     @Severity(SeverityLevel.BLOCKER)
@@ -93,7 +91,6 @@ public class CrudSportsmanTest {
 
     }
 
-    @Issues({@Issue("UI-3")})
     @Test(priority = 1)
     @Description("Test for checking delete functionality on UI")
     @Severity(SeverityLevel.BLOCKER)
@@ -110,7 +107,8 @@ public class CrudSportsmanTest {
     }
 
     @Step
-    private void enterFieldsForSportsman(UiSportsman uiSportsman) {
+    @Attachment
+    private byte[] enterFieldsForSportsman(UiSportsman uiSportsman) {
         sportsmanDetailsPage.typeLastName(uiSportsman.getLastName());
         sportsmanDetailsPage.typeFirstName(uiSportsman.getFirstName());
         sportsmanDetailsPage.typeDateOfBirth(uiSportsman.getDateOfBirth());
@@ -122,6 +120,7 @@ public class CrudSportsmanTest {
         sportsmanDetailsPage.selectStyle(uiSportsman.getStyle());
         sportsmanDetailsPage.selectAge(uiSportsman.getAge());
         sportsmanDetailsPage.selectYear(uiSportsman.getYear());
+        return sportsmanDetailsPage.takeScreenshot();
     }
 
     @Step

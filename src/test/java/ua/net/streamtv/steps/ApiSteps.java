@@ -61,7 +61,6 @@ public class ApiSteps {
         return result.get("id").getAsString();
     }
 
-    @Step
     public String loginThroughApi() {
         Map<String, String> credentials = new HashMap<>();
         credentials.put("username", login);

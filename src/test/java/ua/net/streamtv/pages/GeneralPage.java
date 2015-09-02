@@ -32,7 +32,7 @@ public abstract class GeneralPage {
         }
     }
 
-    protected byte[] takeScreenshot(){
+    public byte[] takeScreenshot(){
         return ((TakesScreenshot)driver).getScreenshotAs(OutputType.BYTES);
     }
 }

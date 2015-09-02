@@ -43,7 +43,6 @@ public class SearchSportsmanTest {
 
     @Test(dataProviderClass = ApiSportsman.class, dataProvider = "randomSportsman")
     @Description("Test for checking search functionality")
-    @Issues({@Issue("SEARCH-1")})
     @Severity(SeverityLevel.CRITICAL)
     public void searchFunctionalityTest(ApiSportsman apiSportsman) {
         try {

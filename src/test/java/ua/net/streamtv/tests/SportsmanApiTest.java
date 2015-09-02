@@ -32,7 +32,6 @@ public class SportsmanApiTest {
 
     private String sportsmanId;
 
-    @Issue("API-1")
     @Test(dataProviderClass = ApiSportsman.class, dataProvider = "randomSportsman", description = "Test case for testing ability to add sportdman through API", priority = 1)
     @Severity(SeverityLevel.BLOCKER)
     public void addSportsmanThroughApiTest(ApiSportsman sportsman) {
@@ -44,7 +43,6 @@ public class SportsmanApiTest {
         assertThat("Sportsman after adding through API is not as expected", actualSportsman, equalTo(sportsman));
     }
 
-    @Issue("API-2")
     @Test(dataProviderClass = ApiSportsman.class, dataProvider = "randomSportsman", description = "Test case for testing ability to update sportsman through API",priority = 2)
     @Severity(SeverityLevel.BLOCKER)
     public void updateSportsmanThroughApiTest(ApiSportsman sportsman) {
@@ -61,7 +59,6 @@ public class SportsmanApiTest {
         assertThat("Sportsman after update through API is not as expected", actualSportsman, equalTo(sportsmanAfterAdd));
     }
 
-    @Issue("API-3")
     @Test(description = "Test case for testing ability to delete sportsman through API",priority = 3)
     @Severity(SeverityLevel.BLOCKER)
     public void deleteSportsmanThroughAPITest() {
