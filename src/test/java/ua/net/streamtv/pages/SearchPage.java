@@ -7,19 +7,17 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Guice;
-import ru.yandex.qatools.htmlelements.element.TextInput;
-import ua.net.streamtv.guiceConfiguration.GuiceTestClass;
-
-import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
+import ru.yandex.qatools.allure.annotations.Attachment;
+import ru.yandex.qatools.allure.annotations.Step;
+import ua.net.streamtv.guiceConfiguration.GuiceTestModule;
 
 /**
  * Created by nskrypka on 8/20/2015.
  */
-@Guice(modules = GuiceTestClass.class)
+@Guice(modules = GuiceTestModule.class)
 public class SearchPage extends GeneralPage {
 
     private WebDriver driver;
@@ -42,38 +40,52 @@ public class SearchPage extends GeneralPage {
         PageFactory.initElements(driver, this);
     }
 
+    @Step
     public void clickAddNewSportsman() {
         waitForElementPresence(NEW_SPORTSMAN_BUTTON, 3).click();
     }
 
-    public void searchForSportsman(String lastName) {
+    @Step
+    @Attachment
+    public byte[] searchForSportsman(String lastName) {
         WebElement searchInput = waitForElementPresence(SEARCH_INPUT, 3);
         searchInput.clear();
         searchInput.sendKeys(lastName);
         driver.findElement(SEARCH_BUTTON).click();
         LOG.info("Search action was performed for " + lastName);
+        return takeScreenshot();
     }
 
-    public void openSportsmanDetails() {
+    @Step
+    @Attachment
+    public byte[] openSportsmanDetails() {
         waitForElementPresence(RESULT_ROW, 3).click();
         LOG.info("Sportsman details page is opened");
+        return takeScreenshot();
     }
 
+    @Step
     public int getSearchResultSize() {
         return driver.findElements(RESULT_ROW).size();
     }
 
-    public void selectRegionFilter(int region) {
+    @Step
+    @Attachment
+    public byte[] selectRegionFilter(int region) {
         Select regionDropdown = new Select(waitForElementPresence(REGION_FILTER, 3));
         regionDropdown.selectByIndex(region);
         LOG.info(region + " region was selected");
         LOG.info(regionDropdown.getFirstSelectedOption().getText() + " region was selected");
+        return takeScreenshot();
     }
 
-    public void selectFstFilter(int fst) {
+    @Step
+    @Attachment
+    public byte[] selectFstFilter(int fst) {
         Select fstDropdown = new Select(fstSelect);
         fstDropdown.selectByIndex(fst);
         LOG.info(fst + " fst was selected");
         LOG.info(fstDropdown.getFirstSelectedOption().getText() + " FST was selected");
+        return takeScreenshot();
     }
 }

@@ -4,12 +4,11 @@ import com.google.inject.Inject;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.Guice;
-import org.testng.annotations.Listeners;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
+import ru.yandex.qatools.allure.annotations.*;
+import ru.yandex.qatools.allure.model.SeverityLevel;
 import ua.net.streamtv.entities.UiSportsman;
-import ua.net.streamtv.guiceConfiguration.GuiceTestClass;
+import ua.net.streamtv.guiceConfiguration.GuiceTestModule;
 import ua.net.streamtv.pages.LoginPage;
 import ua.net.streamtv.pages.SearchPage;
 import ua.net.streamtv.pages.SportsmanDetailsPage;
@@ -23,7 +22,7 @@ import static org.hamcrest.MatcherAssert.*;
  * Created by nskrypka on 8/28/2015.
  */
 @Listeners(TestListener.class)
-@Guice(modules = GuiceTestClass.class)
+@Guice(modules = GuiceTestModule.class)
 public class CrudSportsmanTest {
 
     private Logger LOG = LoggerFactory.getLogger(this.getClass());
@@ -46,6 +45,9 @@ public class CrudSportsmanTest {
     private UiSportsman uiSportsman;
 
     @Test(dataProviderClass = UiSportsman.class, dataProvider = "randomUiSportsman", priority = 0)
+    @Issues({@Issue("UI-1")})
+    @Description("Test for verifying add sportsman functionality on UI")
+    @Severity(SeverityLevel.BLOCKER)
     public void addSportsmanTest(UiSportsman uiSportsman) {
         this.uiSportsman = uiSportsman;
         apiSteps.deleteAllProfiles(uiSportsman.getLastName() + "+" + uiSportsman.getFirstName() + "+" + uiSportsman.getMiddleName());
@@ -68,7 +70,10 @@ public class CrudSportsmanTest {
         assertThat("Sportsman after adding on UI is not as expected", sportsmanActual, equalTo(uiSportsman));
     }
 
+    @Issues({@Issue("UI-2")})
     @Test(dataProviderClass = UiSportsman.class, dataProvider = "randomUiSportsman", priority = 0)
+    @Description("Test for checking update functionality on UI")
+    @Severity(SeverityLevel.BLOCKER)
     public void updateSportsmanTest(UiSportsman uiSportsmanForUpdate) {
         LOG.info("Sportsman details for update : " + uiSportsmanForUpdate.toString());
         loginPage.openSite();
@@ -88,7 +93,10 @@ public class CrudSportsmanTest {
 
     }
 
+    @Issues({@Issue("UI-3")})
     @Test(priority = 1)
+    @Description("Test for checking delete functionality on UI")
+    @Severity(SeverityLevel.BLOCKER)
     public void deleteSportsmanTest() {
         loginPage.openSite();
         loginPage.login();
@@ -101,6 +109,7 @@ public class CrudSportsmanTest {
         assertThat("Delete sportsman on UI was not performed successfully", searchPage.getSearchResultSize(), equalTo(0));
     }
 
+    @Step
     private void enterFieldsForSportsman(UiSportsman uiSportsman) {
         sportsmanDetailsPage.typeLastName(uiSportsman.getLastName());
         sportsmanDetailsPage.typeFirstName(uiSportsman.getFirstName());
@@ -115,6 +124,7 @@ public class CrudSportsmanTest {
         sportsmanDetailsPage.selectYear(uiSportsman.getYear());
     }
 
+    @Step
     private UiSportsman getUiSportsman() {
         String lastNameActual = sportsmanDetailsPage.getLastName();
         String firstNameActual = sportsmanDetailsPage.getFirstName();

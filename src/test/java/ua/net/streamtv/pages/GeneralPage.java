@@ -1,9 +1,7 @@
 package ua.net.streamtv.pages;
 
 import com.google.inject.Inject;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
@@ -32,5 +30,9 @@ public abstract class GeneralPage {
                 break;
             }
         }
+    }
+
+    protected byte[] takeScreenshot(){
+        return ((TakesScreenshot)driver).getScreenshotAs(OutputType.BYTES);
     }
 }

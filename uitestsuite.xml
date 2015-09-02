@@ -13,9 +13,9 @@
         <!--</run>-->
         <!--</groups>-->
         <classes>
-            <class name="ua.net.streamtv.tests.CrudSportsmanTest"/>
+            <!--<class name="ua.net.streamtv.tests.CrudSportsmanTest"/>-->
             <class name="ua.net.streamtv.tests.SearchSportsmanTest"/>
-            <class name="ua.net.streamtv.tests.UploadFilesTest"/>
+            <!--<class name="ua.net.streamtv.tests.UploadFilesTest"/>-->
         </classes>
     </test>
 </suite>

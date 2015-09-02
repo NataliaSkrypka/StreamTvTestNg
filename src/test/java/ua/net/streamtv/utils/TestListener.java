@@ -32,10 +32,4 @@ public class TestListener extends TestListenerAdapter {
         log.info ("------------------------------------ " + result.getName() + " started -------------------------------------");
     }
 
-    @Override
-    public void onFinish(ITestContext testContext){
-    }
-
-
-
 }

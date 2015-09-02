@@ -1,7 +1,10 @@
 package ua.net.streamtv.pages;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -10,15 +13,17 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Guice;
+import ru.yandex.qatools.allure.annotations.Attachment;
+import ru.yandex.qatools.allure.annotations.Step;
 import ru.yandex.qatools.htmlelements.element.Button;
 import ru.yandex.qatools.htmlelements.element.TextInput;
 import ru.yandex.qatools.htmlelements.loader.decorator.HtmlElementDecorator;
-import ua.net.streamtv.guiceConfiguration.GuiceTestClass;
+import ua.net.streamtv.guiceConfiguration.GuiceTestModule;
 
 /**
  * Created by nskrypka on 8/19/2015.
  */
-@Guice(modules = GuiceTestClass.class)
+@Guice(modules = {GuiceTestModule.class})
 public class LoginPage extends GeneralPage {
 
     private Logger LOG = LoggerFactory.getLogger(this.getClass());
@@ -36,22 +41,27 @@ public class LoginPage extends GeneralPage {
     private String password;
 
     @Inject
-    public LoginPage(WebDriver driver) {
+    public LoginPage(WebDriver driver, @Named("base.url") String baseUrl, @Named("login") String login, @Named("password") String password) {
         super(driver);
         this.driver = driver;
-        this.baseUrl = "http://streamtv.net.ua/base/";
-        this.login = "auto";
-        this.password = "test";
+        this.baseUrl = baseUrl;
+        this.login = login;
+        this.password = password;
         PageFactory.initElements(new HtmlElementDecorator(driver), this);
     }
 
-    public void openSite() {
+    @Step
+    @Attachment
+    public byte[] openSite() {
         driver.get(baseUrl);
         driver.manage().window().maximize();
         LOG.info(baseUrl + " site is opened");
+        return takeScreenshot();
     }
 
-    public void login() {
+    @Step
+    @Attachment
+    public byte[] login() {
         new WebDriverWait(driver, 3000).until(ExpectedConditions.presenceOfElementLocated(LOGIN_INPUT));
         driver.findElement(LOGIN_INPUT).clear();
         driver.findElement(LOGIN_INPUT).sendKeys(login);
@@ -59,5 +69,6 @@ public class LoginPage extends GeneralPage {
         passwordInput.sendKeys(password);
         loginButton.click();
         LOG.info("User is logged into site");
+        return takeScreenshot();
     }
 }

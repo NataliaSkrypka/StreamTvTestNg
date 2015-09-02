@@ -2,6 +2,7 @@ package ua.net.streamtv.guiceConfiguration;
 
 import com.google.inject.Binder;
 import com.google.inject.Module;
+import com.google.inject.name.Names;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -11,15 +12,27 @@ import ua.net.streamtv.pages.SearchPage;
 import ua.net.streamtv.pages.SportsmanDetailsPage;
 import ua.net.streamtv.steps.ApiSteps;
 
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Properties;
+
 /**
  * Created by nskrypka on 8/29/15.
  */
-public class GuiceTestClass implements Module {
+public class GuiceTestModule implements Module {
 
     @Override
     public void configure(Binder binder) {
+        Properties props = new Properties();
+        try {
+            props.load(new FileReader(System.getProperty("user.dir") + "\\src\\test\\resources\\TestProperties.properties"));
+            Names.bindProperties(binder, props);
+        } catch (IOException e) {
+            System.out.println("Could not load config: " + e.getMessage());
+            System.exit(1);
+        }
         binder.bind(WebDriver.class).toInstance(getDriver());
-        binder.bind(ApiSteps.class).toInstance(new ApiSteps());
+        binder.bind(ApiSteps.class);
         binder.bind(LoginPage.class);
         binder.bind(SportsmanDetailsPage.class);
         binder.bind(SearchPage.class);

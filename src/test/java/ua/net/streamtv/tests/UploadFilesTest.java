@@ -5,8 +5,12 @@ import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
+import ru.yandex.qatools.allure.annotations.Description;
+import ru.yandex.qatools.allure.annotations.Severity;
+import ru.yandex.qatools.allure.model.SeverityLevel;
+import ru.yandex.qatools.allure.testng.AllureTestListener;
 import ua.net.streamtv.entities.ApiSportsman;
-import ua.net.streamtv.guiceConfiguration.GuiceTestClass;
+import ua.net.streamtv.guiceConfiguration.GuiceTestModule;
 import ua.net.streamtv.pages.LoginPage;
 import ua.net.streamtv.pages.SearchPage;
 import ua.net.streamtv.pages.SportsmanDetailsPage;
@@ -22,8 +26,8 @@ import static org.hamcrest.MatcherAssert.*;
 /**
  * Created by nskrypka on 8/31/15.
  */
-@Listeners(TestListener.class)
-@Guice(modules = GuiceTestClass.class)
+@Listeners({TestListener.class})
+@Guice(modules = GuiceTestModule.class)
 public class UploadFilesTest {
     @Inject
     WebDriver driver;
@@ -44,26 +48,34 @@ public class UploadFilesTest {
     private ApiSportsman apiSportsmanGeneral;
 
     @Test(dataProviderClass = ApiSportsman.class, dataProvider = "randomSportsman", priority = 0)
+    @Description("Test for verifying upload photo functionality")
+    @Severity(SeverityLevel.CRITICAL)
     public void addPhotoToProfileTest(ApiSportsman apiSportsman) throws IOException {
-        LOG.info("Sportsman profile to test photo upload " + apiSportsman.toString());
-        apiSteps.addSportsman(apiSportsman);
+        try {
+            LOG.info("Sportsman profile to test photo upload " + apiSportsman.toString());
+            apiSteps.addSportsman(apiSportsman);
 
-        loginPage.openSite();
-        loginPage.login();
-        searchPage.searchForSportsman(apiSportsman.getLastName());
-        searchPage.openSportsmanDetails();
+            loginPage.openSite();
+            loginPage.login();
+            searchPage.searchForSportsman(apiSportsman.getLastName());
+            searchPage.openSportsmanDetails();
 
-        sportsmanDetailsPage.uploadPhoto(System.getProperty("user.dir") + "\\src\\test\\resources\\files\\download2.jpg");
-        sportsmanDetailsPage.closeSportsmanInfoTab();
+            sportsmanDetailsPage.uploadPhoto(System.getProperty("user.dir") + "\\src\\test\\resources\\files\\download2.jpg");
+            sportsmanDetailsPage.closeSportsmanInfoTab();
 
-        searchPage.searchForSportsman(apiSportsman.getLastName());
-        searchPage.openSportsmanDetails();
-        String downloadedPhotoPath = sportsmanDetailsPage.downloadPhoto();
-        boolean arePhotosEqual = FileComparasionUtils.compareImages(System.getProperty("user.dir") + "\\src\\test\\resources\\files\\expectedImage.png", downloadedPhotoPath);
-        assertThat("Downloaded photo is not as expected", arePhotosEqual, is(true));
+            searchPage.searchForSportsman(apiSportsman.getLastName());
+            searchPage.openSportsmanDetails();
+            String downloadedPhotoPath = sportsmanDetailsPage.downloadPhoto();
+            boolean arePhotosEqual = FileComparasionUtils.compareImages(System.getProperty("user.dir") + "\\src\\test\\resources\\files\\expectedImage.png", downloadedPhotoPath);
+            assertThat("Downloaded photo is not as expected", arePhotosEqual, is(true));
+        } finally {
+            apiSteps.deleteAllProfiles(apiSportsman.getLastName() + "+" + apiSportsman.getFirstName() + "+" + apiSportsman.getMiddleName());
+        }
     }
 
     @Test(dataProviderClass = ApiSportsman.class, dataProvider = "randomSportsman", priority = 1)
+    @Description("Test for verifying upload attachment functionality")
+    @Severity(SeverityLevel.NORMAL)
     public void addAttachmentToProfileTest(ApiSportsman apiSportsman) throws IOException {
         LOG.info("Sportsman profile to test attachment upload " + apiSportsman.toString());
         this.apiSportsmanGeneral = apiSportsman;
@@ -86,19 +98,25 @@ public class UploadFilesTest {
     }
 
     @Test(priority = 1)
+    @Description("Test for verifying delete attachment for profile functionality")
+    @Severity(SeverityLevel.NORMAL)
     public void deleteAttachmentFromProfileTest() {
-        loginPage.openSite();
-        loginPage.login();
-        searchPage.searchForSportsman(apiSportsmanGeneral.getLastName());
-        searchPage.openSportsmanDetails();
+        try {
+            loginPage.openSite();
+            loginPage.login();
+            searchPage.searchForSportsman(apiSportsmanGeneral.getLastName());
+            searchPage.openSportsmanDetails();
 
-        sportsmanDetailsPage.deleteAttachment();
-        sportsmanDetailsPage.closeSportsmanInfoTab();
+            sportsmanDetailsPage.deleteAttachment();
+            sportsmanDetailsPage.closeSportsmanInfoTab();
 
-        searchPage.searchForSportsman(apiSportsmanGeneral.getLastName());
-        searchPage.openSportsmanDetails();
-        int numberOfAttachmentsActual = sportsmanDetailsPage.getNumberOfAttachments();
-        assertThat("Number of attachments is not as expected", numberOfAttachmentsActual, is(0));
+            searchPage.searchForSportsman(apiSportsmanGeneral.getLastName());
+            searchPage.openSportsmanDetails();
+            int numberOfAttachmentsActual = sportsmanDetailsPage.getNumberOfAttachments();
+            assertThat("Number of attachments is not as expected", numberOfAttachmentsActual, is(0));
+        } finally {
+            apiSteps.deleteAllProfiles(apiSportsmanGeneral.getLastName() + "+" + apiSportsmanGeneral.getFirstName() + "+" + apiSportsmanGeneral.getMiddleName());
+        }
     }
 
     @AfterSuite

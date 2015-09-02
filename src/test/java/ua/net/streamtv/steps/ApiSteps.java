@@ -4,9 +4,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import com.jayway.restassured.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.yandex.qatools.allure.annotations.Step;
 import ua.net.streamtv.entities.ApiSportsman;
 
 import java.util.ArrayList;
@@ -33,18 +36,20 @@ public class ApiSteps {
     private String sessionId;
     private Logger LOG = LoggerFactory.getLogger(this.getClass());
 
-    public ApiSteps() {
-        this.createUrl = "http://streamtv.net.ua/base/php/wrestler/create.php";
-        this.login = "auto";
-        this.password = "test";
-        this.loginUrl = "http://streamtv.net.ua/base/php/login.php";
-        this.readUrl = "http://streamtv.net.ua/base/php/wrestler/read.php?id={id}";
-        this.searchUrl = "http://streamtv.net.ua/base/php/wrestler/search.php?count=25&filters=%7B%7D&order=lname&search={search}&start=0";
-        this.updateUrl = "http://streamtv.net.ua/base/php/wrestler/update.php";
-        this.deleteUrl = "http://streamtv.net.ua/base/php/wrestler/delete.php?id={id}";
+    @Inject
+    public ApiSteps(@Named("api.create.url") String createUrl, @Named("api.login.url") String loginUrl, @Named("api.read.url") String readUrl, @Named("api.search.url") String searchUrl, @Named("api.update.url") String updateUrl, @Named("api.delete.url") String deleteUrl, @Named("login") String login, @Named("password") String password) {
+        this.createUrl = createUrl;
+        this.login = login;
+        this.password = password;
+        this.loginUrl = loginUrl;
+        this.readUrl = readUrl;
+        this.searchUrl = searchUrl;
+        this.updateUrl = updateUrl;
+        this.deleteUrl = deleteUrl;
         this.sessionId = loginThroughApi();
     }
 
+    @Step
     public String addSportsman(ApiSportsman sportsman) {
         String givenSportsman = new Gson().toJson(sportsman);
         Response response = given().contentType(JSON).cookie("PHPSESSID", sessionId).body(givenSportsman).
@@ -56,6 +61,7 @@ public class ApiSteps {
         return result.get("id").getAsString();
     }
 
+    @Step
     public String loginThroughApi() {
         Map<String, String> credentials = new HashMap<>();
         credentials.put("username", login);
@@ -68,6 +74,7 @@ public class ApiSteps {
         return response.cookie("PHPSESSID");
     }
 
+    @Step
     public ApiSportsman readSportsman(String id) {
         Response response = given().cookie("PHPSESSID", sessionId).
                 when().get(readUrl, id);
@@ -78,6 +85,7 @@ public class ApiSteps {
         return sportsman;
     }
 
+    @Step
     public String searchForSportsman(String searchParameter) {
         String sportsmanId = "";
         Response response = given().cookie("PHPSESSID", sessionId).
@@ -85,16 +93,14 @@ public class ApiSteps {
         response.then().statusCode(200);
         String responseString = response.asString();
         assertThat(responseString, not(containsString("Invalid query")));
-        response.prettyPrint();
         if (!responseString.contains("{\"total\":\"0\"")) {
-            ArrayList<ApiSportsman> rows = new Gson().fromJson(responseString, new TypeToken<ArrayList<ApiSportsman>>() {
-            }.getType());
-            sportsmanId = rows.get(0).getId();
+            sportsmanId = response.then().extract().body().jsonPath().get("rows.id_wrestler").toString().replace("[","").replace("]","");
             LOG.info(sportsmanId + " sportsman was found through API for search parameter " + searchParameter);
         }
         return sportsmanId;
     }
 
+    @Step
     public void updateSportsman(ApiSportsman sportsman) {
         String givenSportsman = new Gson().toJson(sportsman);
         Response response = given().contentType(JSON).cookie("PHPSESSID", sessionId).body(givenSportsman).
@@ -104,6 +110,7 @@ public class ApiSteps {
         LOG.info(sportsman.getLastName() + " sportsman was updated successfully through API");
     }
 
+    @Step
     public void deleteSportsman(String sporsmanId) {
         Response response = given().cookie("PHPSESSID", sessionId).
                 when().delete(deleteUrl, sporsmanId);
@@ -112,6 +119,7 @@ public class ApiSteps {
         LOG.info(sporsmanId + " sportsman was deleted successfully");
     }
 
+    @Step
     public void deleteAllProfiles(String fio) {
         String sportsmanId;
         while (!"".equals(sportsmanId = searchForSportsman(fio))) {
