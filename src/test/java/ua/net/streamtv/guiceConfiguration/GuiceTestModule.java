@@ -6,14 +6,18 @@ import com.google.inject.name.Names;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxProfile;
 import ua.net.streamtv.pages.LoginPage;
 import ua.net.streamtv.pages.SearchPage;
 import ua.net.streamtv.pages.SportsmanDetailsPage;
 import ua.net.streamtv.steps.ApiSteps;
 
+import static java.io.File.*;
+
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Properties;
 
 /**
@@ -25,9 +29,10 @@ public class GuiceTestModule implements Module {
     public void configure(Binder binder) {
         Properties props = new Properties();
         try {
-            props.load(new FileReader(System.getProperty("user.dir") + "\\src\\test\\resources\\TestProperties.properties"));
+            URL url = getClass().getResource("/TestProperties.properties");
+            props.load(new FileReader(new File(url.toURI())));
             Names.bindProperties(binder, props);
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             System.out.println("Could not load config: " + e.getMessage());
             System.exit(1);
         }

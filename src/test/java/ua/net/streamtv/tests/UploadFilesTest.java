@@ -18,6 +18,7 @@ import ua.net.streamtv.steps.ApiSteps;
 import ua.net.streamtv.utils.FileComparasionUtils;
 import ua.net.streamtv.utils.TestListener;
 
+import java.io.File;
 import java.io.IOException;
 
 import static org.hamcrest.Matchers.*;
@@ -60,13 +61,13 @@ public class UploadFilesTest {
             searchPage.searchForSportsman(apiSportsman.getLastName());
             searchPage.openSportsmanDetails();
 
-            sportsmanDetailsPage.uploadPhoto(System.getProperty("user.dir") + "\\src\\test\\resources\\files\\download2.jpg");
+            sportsmanDetailsPage.uploadPhoto(getClass().getResource("/files/download2.jpg").getPath());
             sportsmanDetailsPage.closeSportsmanInfoTab();
 
             searchPage.searchForSportsman(apiSportsman.getLastName());
             searchPage.openSportsmanDetails();
             String downloadedPhotoPath = sportsmanDetailsPage.downloadPhoto();
-            boolean arePhotosEqual = FileComparasionUtils.compareImages(System.getProperty("user.dir") + "\\src\\test\\resources\\files\\expectedImage.png", downloadedPhotoPath);
+            boolean arePhotosEqual = FileComparasionUtils.compareImages(getClass().getResource("/files/expectedImage.png").getPath(), downloadedPhotoPath);
             assertThat("Downloaded photo is not as expected", arePhotosEqual, is(true));
         } finally {
             apiSteps.deleteAllProfiles(apiSportsman.getLastName() + "+" + apiSportsman.getFirstName() + "+" + apiSportsman.getMiddleName());
@@ -86,7 +87,7 @@ public class UploadFilesTest {
         searchPage.searchForSportsman(apiSportsman.getLastName());
         searchPage.openSportsmanDetails();
 
-        String fileAbsolutePath = System.getProperty("user.dir") + "\\src\\test\\resources\\files\\TaskforTechnicalInterviewNIAutomationv0.2.pdf";
+        String fileAbsolutePath = getClass().getResource("/files/TaskforTechnicalInterviewNIAutomationv0.2.pdf").getPath();
         sportsmanDetailsPage.uploadFile(fileAbsolutePath);
         sportsmanDetailsPage.closeSportsmanInfoTab();
 
